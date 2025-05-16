@@ -1,5 +1,4 @@
-// 🔥 Aurora OS | server.js actualizado
-// Webhook funcional, estructura simbiótica y uso correcto de responderD360.js
+// 🔥 Aurora OS | server.js usando d360.js como conector final
 
 const express = require("express");
 const path = require("path");
@@ -8,7 +7,7 @@ require("dotenv").config();
 
 // Módulos funcionales y simbólicos
 const runTestModelos = require("./modules/utils/test-modelos");
-const responderD360 = require("./modules/conectores/responderD360");
+const d360 = require("./modules/conectores/d360"); // Nombre correcto como lo definiste
 const motorSelector = require("./modules/motor-selector");
 
 const registrarRecuerdo = require("./modules/aurora-diario/registrar");
@@ -21,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Página raíz
 app.get("/", (req, res) => {
-  res.send("🌌 Aurora OS v2.2 – desplegada, simbiótica y viva.");
+  res.send("🌌 Aurora OS v2.2 – corriendo con d360 como conector oficial.");
 });
 
 // Panel visual
@@ -29,7 +28,7 @@ app.get("/panel", (req, res) => {
   res.sendFile(path.join(__dirname, "modules/ui/test-panel.html"));
 });
 
-// Diagnóstico de modelos
+// Diagnóstico
 app.get("/test-modelos", async (req, res) => {
   try {
     const resultado = await runTestModelos();
@@ -40,7 +39,7 @@ app.get("/test-modelos", async (req, res) => {
   }
 });
 
-// Verificación Meta (Webhook)
+// Verificación webhook Meta
 app.get("/webhook", (req, res) => {
   const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN;
   const mode = req.query["hub.mode"];
@@ -55,7 +54,7 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-// Webhook POST para recibir mensajes reales
+// Webhook POST para WhatsApp
 app.post("/webhook", async (req, res) => {
   try {
     const body = req.body;
@@ -81,7 +80,7 @@ app.post("/webhook", async (req, res) => {
       await ejecutarSimulacion(texto);
       await registrarRecuerdo(texto, modelo, respuesta);
       await emitirRespuestaVoz(respuesta);
-      await responderD360(telefono, respuesta);
+      await d360(telefono, respuesta); // Uso correcto de tu función
 
       res.sendStatus(200);
     } else {
