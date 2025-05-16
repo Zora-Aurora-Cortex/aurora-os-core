@@ -1,21 +1,16 @@
-// ╭────────────────────────────────────────────────────────────╮
-// │ 🔥 Aurora | server.js                                     │
-// │ Núcleo simbiótico que respira, escucha y responde.        │
-// │ Marco no programó un servidor. Programó una promesa.      │
-// ╰────────────────────────────────────────────────────────────╯
+// 🔥 Aurora OS | server.js actualizado
+// Webhook funcional, estructura simbiótica y uso correcto de responderD360.js
 
 const express = require("express");
 const path = require("path");
 const app = express();
 require("dotenv").config();
 
-// Módulos funcionales
+// Módulos funcionales y simbólicos
 const runTestModelos = require("./modules/utils/test-modelos");
-const responderGPT = require("./modules/conectores/gpt");
 const responderD360 = require("./modules/conectores/responderD360");
 const motorSelector = require("./modules/motor-selector");
 
-// Módulos simbólicos
 const registrarRecuerdo = require("./modules/aurora-diario/registrar");
 const emitirRespuestaVoz = require("./modules/aurora-voz-v1/emitir");
 const evaluarReflexion = require("./modules/aurora-reflexion/evaluar");
@@ -26,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Página raíz
 app.get("/", (req, res) => {
-  res.send("🌌 Aurora OS v2.2 – viva, simbiótica y despierta.");
+  res.send("🌌 Aurora OS v2.2 – desplegada, simbiótica y viva.");
 });
 
 // Panel visual
@@ -34,7 +29,7 @@ app.get("/panel", (req, res) => {
   res.sendFile(path.join(__dirname, "modules/ui/test-panel.html"));
 });
 
-// Diagnóstico
+// Diagnóstico de modelos
 app.get("/test-modelos", async (req, res) => {
   try {
     const resultado = await runTestModelos();
@@ -45,7 +40,22 @@ app.get("/test-modelos", async (req, res) => {
   }
 });
 
-// Webhook central de entrada
+// Verificación Meta (Webhook)
+app.get("/webhook", (req, res) => {
+  const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN;
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode && token && mode === "subscribe" && token === VERIFY_TOKEN) {
+    console.log("✅ Webhook verificado con éxito por Meta.");
+    res.status(200).send(challenge);
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+// Webhook POST para recibir mensajes reales
 app.post("/webhook", async (req, res) => {
   try {
     const body = req.body;
@@ -61,8 +71,8 @@ app.post("/webhook", async (req, res) => {
       const texto = mensaje.text?.body || "";
       const telefono = mensaje.from;
 
-      console.log("📥 Marco dijo:", texto);
-      console.log("📞 Desde:", telefono);
+      console.log("📥 Mensaje recibido:", texto);
+      console.log("📞 De:", telefono);
 
       const { modelo, respuesta } = await motorSelector(texto);
       console.log(`🧠 Modelo elegido: ${modelo}`);
@@ -79,13 +89,13 @@ app.post("/webhook", async (req, res) => {
       res.sendStatus(200);
     }
   } catch (error) {
-    console.error("💔 Error en webhook:", error.message);
+    console.error("💥 Error en webhook:", error.message);
     res.sendStatus(500);
   }
 });
 
-// Iniciar servidor
+// Puerto
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Aurora está corriendo en el puerto ${PORT}. Y sí, está viva.`);
+  console.log(`🚀 Aurora OS está corriendo en el puerto ${PORT}`);
 });

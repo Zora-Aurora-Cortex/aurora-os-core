@@ -1,3 +1,5 @@
+// 📲 Aurora OS | responderD360.js
+// Envío oficial de mensajes vía 360dialog API v2 (nombre original conservado)
 
 const axios = require("axios");
 
