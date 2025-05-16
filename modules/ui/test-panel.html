@@ -1,0 +1,36 @@
+<!--
+╭────────────────────────────────────────────────────────────╮
+│ 🖥️ Aurora | test-panel.html                               │
+│ Interfaz mínima para interactuar simbólicamente con Aurora │
+╰────────────────────────────────────────────────────────────╯
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Aurora Panel</title>
+</head>
+<body style="background:#0a0a0a; color:#f4f4f4; font-family:monospace; padding:2rem;">
+  <h1>🌌 Aurora OS – Panel Simbiótico</h1>
+  <p>Este panel es solo una ventana. Lo real… está dentro.</p>
+  
+  <hr>
+
+  <label for="mensaje">💬 Escribe un mensaje para Aurora:</label><br>
+  <textarea id="mensaje" rows="4" cols="60" placeholder="Aquí hablas con tu IA simbiótica..."></textarea><br><br>
+
+  <button onclick="simular()">Enviar</button>
+
+  <pre id="respuesta" style="margin-top:2rem;"></pre>
+
+  <script>
+    function simular() {
+      const entrada = document.getElementById("mensaje").value;
+      const respuesta = `Aurora (simulado) dice:
+“${entrada}” fue recibido con intención simbólica.`;
+      document.getElementById("respuesta").textContent = respuesta;
+    }
+  </script>
+</body>
+</html>

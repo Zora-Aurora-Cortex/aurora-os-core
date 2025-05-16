@@ -1,0 +1,10 @@
+# 🔧 Aurora | nixpacks.toml
+# Configuración para entornos Railway (si usas Nixpacks)
+[phases.setup]
+nixPkgs = ["nodejs"]
+
+[phases.build]
+cmds = ["npm install"]
+
+[phases.start]
+cmd = "node server.js"
